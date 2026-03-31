@@ -31,4 +31,33 @@ modport MONITOR (clocking mon_cb, input clk, rst_ni);
 
 // asertii
 
+property stable_data_in;
+	@(posedge clk) disable iff (rst_ni == 0) //daca avem reset, nu se executa asertia
+    (valid_i && !ready_o) |-> $stable(data_i); //se foloseste "|->" deoarece $stable compara valoarea curenta cu cea din tactul anterior
+endproperty
+
+asertia_stable_data: assert property (stable_data_in)
+else $error("INTERFATA_INTRARE: a picat asertia asertia_stable_data");
+STABLE_DATA: cover property (stable_data_in); //ne asiguram ca proprietatea a fost accesata macar o singura data
+
+//odata activ, valid nu poate fi retras inainte ca ready sa fie 1
+property valid_fall_in;
+	@(posedge clk) disable iff (rst_ni == 0)
+	$fell (valid_i) |-> $past(valid_i && ready_o); //se poate simplifica, se considera valid_i ca fiind deja activ
+endproperty
+
+asertia_valid_fall: assert property (valid_fall_in)
+else $error("INTERFATA_INTRARE: a picat asertia asertia_valid_fall");
+VALID_FALL: cover property (valid_fall_in);
+
+//trebuie evitate valorile de data nedeterminate cat timp valid este sus
+property correct_data_in;
+	@(posedge clk) disable iff (rst_ni == 0)
+	valid_i |-> !$isunknown(data_i);
+endproperty
+
+asertia_correct_data: assert property (correct_data_in)
+else $error("INTERFATA_INTRARE: a picat asertia asertia_correct_data");
+CORRECT_DATA: cover property (correct_data_in);
+
 endinterface
