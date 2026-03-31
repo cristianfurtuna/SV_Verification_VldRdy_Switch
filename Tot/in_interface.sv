@@ -10,7 +10,7 @@ interface in_interface(input logic clk, rst_ni);
     default input #1 output #1;
         output data_i;
         output valid_i;
-        input ready_o;
+        input  ready_o;
     endclocking
 
     //clocking block for monitor    

@@ -15,7 +15,8 @@ rand int delay;         //delay intre tranzactii
 //constrangeri
 
 constraint delay_constr { delay >= 0 && delay < 10; }; //ne asiguram ca delay-ul dintre tranzactii nu este prea mare
-
+constraint valid_constr { soft valid_i == 1'b1; }; //valid_i poate fi doar 0 sau 1
+												// soft inseamna ca putem sa suprascriem aceasta constrangere in test fara a genera erori
 
 //aceasta functie afiseaza valorile randomizate ale atributelor clasei
 function void display();

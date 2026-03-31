@@ -61,7 +61,7 @@ task main;
 			end
 		join_any
 		disable fork;
-		reset();
+		// reset();
 	end
 endtask
 

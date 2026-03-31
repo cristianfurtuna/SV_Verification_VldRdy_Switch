@@ -1,10 +1,10 @@
 class environment;
-    `include "transaction_in.sv"
-    `include "transaction_out.sv"
-    `include "generator_in.sv"
-    `include "generator_out.sv"
-    `include "driver_out.sv"
-    `include "driver_in.sv"
+//    `include "transaction_in.sv"
+//    `include "transaction_out.sv"
+//    `include "generator_in.sv"
+//    `include "generator_out.sv"
+//    `include "driver_out.sv"
+//    `include "driver_in.sv"
     generator_in    gen_i;
     driver_in       driv_i;
     

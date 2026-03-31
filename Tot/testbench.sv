@@ -1,6 +1,6 @@
 module testbench;
 
-    `include "generator_in.sv"
+//    `include "generator_in.sv"
 
     bit clk;
     bit rst_ni;

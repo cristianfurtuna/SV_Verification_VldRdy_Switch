@@ -7,7 +7,7 @@ input            clk_i,
 //interfata de intrare
 input            valid_i,
 input [9:0]      data_i,
-output reg       ready_o,
+output             ready_o,
 // interfata de iesire
 output reg [3:0]      valid_o,
 input      [3:0]      ready_i, 
@@ -15,7 +15,7 @@ output reg [3:0][7:0] data_o
  
 
 );
-reg [FIFO_DEPTH-1:0] [9:0]    fifo_mem;
+reg [9:0] fifo_mem [0:FIFO_DEPTH-1];
 wire                          wr_i;
 reg                           rd_i;
 wire [$clog2(FIFO_DEPTH)-1:0] cnt_rd_o;
