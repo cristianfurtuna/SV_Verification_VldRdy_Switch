@@ -1,4 +1,4 @@
-/*//scoreboardul preia datele de la monitor si verifica acuratetea acestora; pentru a se
+//scoreboardul preia datele de la monitor si verifica acuratetea acestora; pentru a se
 // face aceasta verificare, in scoreboard este implementata functionalitatea DUT-ului;
 // intrarile pe care le primeste DUT-ul sunt preluate de catre monitor si transmise
 // scoreboardului; comparandu-se iesirile monitorului si ale scoreboardului se poate 
@@ -44,9 +44,20 @@ task collect_input;
         transaction_in tr;
         mon_in2scb.get(tr);
         items_expected[tr.address].push_back(tr); 
-        $display("[SCB-LOG] Pachet salvat pentru Canal %0d (Data: %h)", tr.address, tr.data_i);
+        $display("%0t [SCB-LOG] Pachet salvat pentru Canal %0d (Data: %h)", $time, tr.address, tr.data_i);
     end
 endtask
+
+function check_fifos_are_empty();
+transaction_in trans_aux;
+    for (int i = 0; i<4;i++)
+    assert (items_expected[i].size() == 0)
+    else begin $error("%0t pe canalul %0d, nu au iesit toate datele care trebuiau sa iasa, deoarece mai sunt %0d elemente", $time, i, items_expected[i].size());
+    $display("unul din elementele in plus este:");
+    trans_aux = items_expected[i].pop_front();
+    trans_aux.display();
+    end
+endfunction
 
 //verificare canale
 task check_port(int channel, mailbox mon_out2scb);
@@ -58,15 +69,15 @@ task check_port(int channel, mailbox mon_out2scb);
             tr_expected = items_expected[channel].pop_front(); //luam primul pachet asteptat
             
             if(tr_actual.data_o == tr_expected.data_i) begin
-                $display("[SCB-PASS] Canal %0d | Expected: %h, Actual: %h", channel, tr_expected.data_i, tr_actual.data_o);
+                $display("%0t [SCB-PASS] Canal %0d | Expected: %h, Actual: %h", $time, channel, tr_expected.data_i, tr_actual.data_o);
             end else begin
-                $error("[SCB-FAIL] Canal %0d | Expected: %h, Actual: %h", channel, tr_expected.data_i, tr_actual.data_o);
+                $error("%0t [SCB-FAIL] Canal %0d | Expected: %h, Actual: %h", $time, channel, tr_expected.data_i, tr_actual.data_o);
             end
         end else begin
-            $error("[SCB-UNEXPECTED] Canal %0d a scos date (%h) dar nu era nimic asteptat!", channel, tr_actual.data_o);
+            $error("%0t [SCB-UNEXPECTED] Canal %0d a scos date (%h) dar nu era nimic asteptat!", $time, channel, tr_actual.data_o);
         end
         no_transactions++;        
     end
 endtask                
                
-endclass */
+endclass 

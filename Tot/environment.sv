@@ -11,9 +11,9 @@ class environment;
     generator_out   gen_o_0, gen_o_1, gen_o_2, gen_o_3;
     driver_out      driv_o_0, driv_o_1, driv_o_2, driv_o_3;
         
-    // monitor_in      mon_in;
+    monitor_in      mon_in;
     monitor_out     mon_o_0, mon_o_1, mon_o_2, mon_o_3;
-    //scoreboard      scb;
+    scoreboard      scb;
 
     mailbox input_gen2driv;
     //mailbox input_gen2scb;
@@ -21,7 +21,7 @@ class environment;
     mailbox output_gen2driv_1;
     mailbox output_gen2driv_2;
     mailbox output_gen2driv_3;
-    // mailbox mon_in2scb;
+    mailbox mon_in2scb;
     mailbox mon_out2scb_0;
     mailbox mon_out2scb_1;
     mailbox mon_out2scb_2;
@@ -46,7 +46,7 @@ class environment;
         output_gen2driv_1    = new();
         output_gen2driv_2    = new();
         output_gen2driv_3    = new();
-        // mon_in2scb  = new();
+        mon_in2scb  = new();
         mon_out2scb_0 = new();
         mon_out2scb_1 = new();
         mon_out2scb_2 = new();
@@ -63,14 +63,13 @@ class environment;
         driv_o_2     = new(out_vif_2, output_gen2driv_2, "CH_2");
         driv_o_3     = new(out_vif_3, output_gen2driv_3, "CH_3");
         
-        // mon_in  = new(in_vif,  mon_in2scb);
+        mon_in  = new(in_vif,  mon_in2scb, "IN");
         mon_o_0 = new(out_vif_0, mon_out2scb_0, "CH_0");
         mon_o_1 = new(out_vif_1, mon_out2scb_1, "CH_1");
         mon_o_2 = new(out_vif_2, mon_out2scb_2, "CH_2");
         mon_o_3 = new(out_vif_3, mon_out2scb_3, "CH_3");
        
-        //nu avem monitor_in, folosesc datele provenite de la generator_in
-        //scb     = new(input_gen2scb, mon_out2scb_0, mon_out2scb_1, mon_out2scb_2, mon_out2scb_3);
+        scb     = new(mon_in2scb, mon_out2scb_0, mon_out2scb_1, mon_out2scb_2, mon_out2scb_3);
 
     endfunction
 
@@ -90,6 +89,7 @@ class environment;
         fork 
             gen_i.main();
             driv_i.main();
+            mon_in.main();
             gen_o_0.main();
             gen_o_1.main();
             gen_o_2.main();
@@ -102,9 +102,9 @@ class environment;
             mon_o_1.main();
             mon_o_2.main();
             mon_o_3.main();
-            //scb.main();  
+            scb.main();  
             begin
-                #50000;
+                #15000;
                 report();
                 $stop;
             end    
@@ -112,6 +112,7 @@ class environment;
     endtask
 
     function void report();
+        scb.check_fifos_are_empty();
         $display("\n====================================================");
         $display("          RAPORT FINAL COVERAGE IESIRE");
         $display("====================================================");

@@ -7,17 +7,16 @@ class transaction_in;
 
 rand bit 	   valid_i;
 rand bit [7:0] data_i;
-rand bit [9:8] address;
+rand bit [1:0] address;
 	 
 	 int trans_no;      //numarator tranzactii ; int e mai usor pentru ca accepta si valori foarte mari
 rand int delay;         //delay intre tranzactii
 
 //constrangeri
 //constraint delay_constr { delay >= 0 && delay < 10; }; //ne asiguram ca delay-ul dintre tranzactii nu este prea mare
-constraint delay_constr { delay inside {[0:200]};}; //ne asiguram ca avem delay intr-o plaja mai mare de valori --Denis
-constraint valid_constr { soft valid_i == 1'b1; }; //soft ne permite sa suprascriem constraint-ul
-constraint addr_constr  { address inside {[0:3]};}; //ne asiguram ca fiecare canal primeste date --Denis  
-constraint data_constr  { data_i inside {[0:255]};}; //ne asiguram ca data acopera toata plaja de valori --Denis
+constraint delay_constr { delay inside {[0:50]};}; //ne asiguram ca avem delay intr-o plaja mai mare de valori --Denis
+constraint valid_constr { soft  valid_i  dist { 1'b1 := 90, 1'b0 := 10}; }; //soft ne permite sa suprascriem constraint-ul
+//constraint data_constr  { data_i inside {[0:255]};}; //ne asiguram ca data acopera toata plaja de valori --Denis
 
 
 //aceasta functie afiseaza valorile randomizate ale atributelor clasei

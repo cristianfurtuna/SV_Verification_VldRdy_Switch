@@ -2,7 +2,7 @@
 //(folosind obiecte ale clasei transaction); in implementarea de fata, datele preluate de pe interfete sunt trimise scoreboardului pentru verificare
 //Samples the interface signals, captures into transaction packet and send the packet to scoreboard.
 
-`define MON_IF out_vif.MONITOR.mon_cb
+`define MON_OUT_IF out_vif.MONITOR.mon_cb
 class monitor_out;
 
 //creating virtual interface handle
@@ -40,9 +40,9 @@ task main;
     //semnale fiind retinute in obiectul de tip tranzactie
     @(posedge out_vif.MONITOR.clk);
     //daca avem handshake valid pe canalul corespunzator ID-ului
-    if(`MON_IF.valid_o && `MON_IF.ready_i) begin
+    if(`MON_OUT_IF.valid_o && `MON_OUT_IF.ready_i) begin
         trans = new(); //se creaza un obiect de tip tranzactie pentru datele capturate
-        trans.data_o = `MON_IF.data_o; // colectam datele de pe canal
+        trans.data_o = `MON_OUT_IF.data_o; // colectam datele de pe canal
         trans.delay = current_delay; //retinem delay-ul masurat
         
         //afisam in consola ce am capturat
@@ -59,7 +59,7 @@ task main;
         
         //asteptam sa se termine handshake-ul curent pentru a nu citi
         //acelasi pachet de mai multe ori
-        wait(`MON_IF.valid_o == 0 || `MON_IF.ready_i == 0);
+        wait(`MON_OUT_IF.valid_o == 0 || `MON_OUT_IF.ready_i == 0);
     end
       else begin
         //daca nu avem transfer valid, incrementam delay-ul
