@@ -5,7 +5,6 @@
 //`define DRIV_IF in_vif.DRIVER.driver_cb
 
 class driver_in;
-
 int no_transactions;
 
 virtual in_interface in_vif;
@@ -20,7 +19,7 @@ endfunction
 //resetam input-urile
 
 task reset;
-	@(in_vif.rst_ni ==0);//asteptam activarea resetului
+	wait(in_vif.rst_ni ==0);//asteptam activarea resetului, modificat cu wait
 	in_vif.DRIVER.drv_cb.valid_i <= 0;
 	in_vif.DRIVER.drv_cb.data_i  <= 0;  //ne legam prin modport
 	//asteptand dupa posedge ne-ar strica logica la thread-uri
@@ -31,7 +30,7 @@ task driving;
 	transaction_in trans;
 	gen2driv.get(trans);
 	
-	$display("%0t--------- [DRIVER-STARTED: %0d] ---------",$time,  no_transactions);
+	$display("%0t--------- [DRIVER_IN-STARTED: %0d] ---------",$time,  no_transactions);
 	
 	repeat(trans.delay)	@(posedge in_vif.clk);
 	
@@ -42,6 +41,8 @@ task driving;
 	@(posedge in_vif.clk iff in_vif.DRIVER.drv_cb.ready_o);// numai dupa finalizarea tranzactiei protocolul permite punerea semnalului valid in 0 si modificarea datelor
 	in_vif.DRIVER.drv_cb.valid_i <= 0;
 	in_vif.DRIVER.drv_cb.data_i  <= 0;
+	
+	@(in_vif.DRIVER.drv_cb); //adaugat de Denis, asteptam un tact intre tranzactii 
 	
 	no_transactions++;
 endtask
@@ -61,7 +62,6 @@ task main;
 			end
 		join_any
 		disable fork;
-		// reset();
 	end
 endtask
 

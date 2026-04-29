@@ -8,8 +8,8 @@ rand int delay;         //delay intre tranzactii (pe iesire, complica monitorul)
 rand int duration_of_transaction;         //delay intre tranzactii (pe iesire, complica monitorul), de asemenea nu mai putem sa ii dam constraint
 
 //constrangeri
-constraint delay_c {delay inside {[0:10]};}
-constraint duration_c {duration_of_transaction inside {[1:10]};}
+constraint delay_c {delay inside {[0:200]};}
+constraint duration_c {duration_of_transaction inside {[1:50]};}
 
 //aceasta functie afiseaza valorile randomizate ale atributelor clasei
 function void display();

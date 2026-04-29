@@ -16,8 +16,7 @@ endfunction
 //resetam input-urile (input-uri in DUT)
 
 task reset;
-//	@(negedge out_vif.rst_ni);
-    @(posedge out_vif.clk iff out_vif.rst_ni ==0);
+	@(negedge out_vif.rst_ni);
 	out_vif.ready_i <= 0;
 	//asteptand dupa posedge ne-ar strica logica la thread-uri
 endtask
