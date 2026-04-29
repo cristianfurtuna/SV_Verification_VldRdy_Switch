@@ -2,19 +2,18 @@ module switch#(
  parameter FIFO_DEPTH = 6
 ) 
 (
-input            rst_ni,
-input            clk_i,
+input                 rst_ni,
+input                 clk_i,
 //interfata de intrare
-input            valid_i,
-input [9:0]      data_i,
-output             ready_o,
+input                 valid_i,
+input [9:0]           data_i,
+output                ready_o,
 // interfata de iesire
 output reg [3:0]      valid_o,
 input      [3:0]      ready_i, 
 output reg [3:0][7:0] data_o
- 
-
 );
+
 reg [9:0] fifo_mem [0:FIFO_DEPTH-1];
 wire                          wr_i;
 reg                           rd_i;
@@ -34,12 +33,13 @@ assign ready_o = ~fifo_full_o;
 
 //rd_i, 
 //daca exista valid pe oricare din canale si ready(e pregatit sa preia datele) pe acelasi canal atunci se face citirea
+//ATRIBUIRI NEBLOCANTE IN ALWAYS COMBINATIONAL, INLOCUIRE CU ATRIBUIRI BLOCANTE
 always @(*) begin 
 
 if(valid_o[0] && ready_i[0] || valid_o[1] && ready_i[1] || valid_o[2] && ready_i[2] || valid_o[3] && ready_i[3] )
-   rd_i <= 1;
+   rd_i <= 1; //bug
    else
-   rd_i<=0;
+   rd_i <= 0;  //bug
 
 end
 
@@ -84,33 +84,34 @@ else
    valid_o[3] <= 0;
 end 
 
-//fifo_mem
+//fifo_mem -MODIFICAT DIN ATRIBUIRE BLOCANTA IN NEBLOCANTA
 always @(posedge clk_i or negedge rst_ni) begin
 
  if(valid_i && ready_o && rst_ni)
-    fifo_mem[cnt_wr_o] = data_i;
+    fifo_mem[cnt_wr_o] <= data_i; //bug
  
 
 end
 
 
 //data_o
-//in functie de adresa de pe bitii [9:8] se face scriu datele pe canalul corespunzator
+//in functie de adresa de pe bitii [9:8] se scriu datele pe canalul corespunzator
+//MODIFICARE DIN ATRIBUIRI BLOCANTE IN ATRIBUIRI NEBLOCANTE
 always @(posedge clk_i or negedge rst_ni) begin 
 if(~rst_ni)
     data_o <= 'b0;
 else
 if(fifo_mem[cnt_rd_o][9:8] == 0)
-    data_o[0] = fifo_mem[cnt_rd_o][7:0];
+    data_o[0] <= fifo_mem[cnt_rd_o][7:0]; //bug gasit
 else
 if(fifo_mem[cnt_rd_o][9:8] == 1)
-    data_o[1] = fifo_mem[cnt_rd_o][7:0];
+    data_o[1] <= fifo_mem[cnt_rd_o][7:0]; //bug gasit
 else
 if(fifo_mem[cnt_rd_o][9:8] == 2)
-    data_o[2] = fifo_mem[cnt_rd_o][7:0];
+    data_o[2] <= fifo_mem[cnt_rd_o][7:0]; //bug gasit
 else
 if(fifo_mem[cnt_rd_o][9:8] == 3)
-    data_o[3] = fifo_mem[cnt_rd_o][7:0];
+    data_o[3] <= fifo_mem[cnt_rd_o][7:0]; //bug gasit
 else 
     data_o <= 'b0;
 end 

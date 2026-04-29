@@ -19,13 +19,14 @@ reg fifo_full_wire;
 reg fifo_empty_wire;
 
 //fifo full
+//MODIFICARE DIN ATRIBUIRE BLOCANTA IN ATRIBUIRE NEBLOCANTA
 always @(*) begin
 
 if(~rst_ni)
      fifo_full_wire <= 0;
 	 
 else if((cnt_wr_o == cnt_rd_o) && (fifo_elements != 0))  //fifo este plin cand pointerul de scriere este cu 1 in urma pointerului de citire si fifo nu este gol
-      fifo_full_wire = 1;
+      fifo_full_wire <= 1; //bug
 else 
       fifo_full_wire <= 0;
     
@@ -84,6 +85,7 @@ end
 
 end
 
+//POSIBIL BUG, ATRIBUIRI NEBLOCANTE IN ALWAYS COMBINATIONAL
 //fifo_empty_o
 always @(*) begin 
   if(~rst_ni)
