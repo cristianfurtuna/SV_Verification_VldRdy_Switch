@@ -8,11 +8,14 @@ int trans_ct;
 
 mailbox gen2driv;
 
+//mailbox gen2scb; //adaugat pt scb
+
 
 //constructor
-function new(mailbox gen2driv);
+function new(mailbox gen2driv/*, mailbox gen2scb*/);
 //getting the mailbox handle from env, in order to share the transaction packet between the generator and driver, the same mailbox is shared between both.
 	this.gen2driv = gen2driv;
+	//this.gen2scb  = gen2scb;
     trans		  = new();
 endfunction
 
@@ -27,6 +30,7 @@ task main();
 			
 		tr = trans.do_copy(); //copia se face pentru a transmite tranzactii separate la adrese noi de memorie (similar pointer)
 		gen2driv.put(tr);
+		//gen2scb.put(tr);
 	end	
 endtask
 
@@ -37,6 +41,7 @@ task single_transaction(bit[7:0] data, bit [1:0] addr);
 			
 		tr = trans.do_copy(); //copia se face pentru a transmite tranzactii separate la adrese noi de memorie (similar pointer)
 		gen2driv.put(tr);
+		//gen2scb.put(tr);
 	
 endtask
 
