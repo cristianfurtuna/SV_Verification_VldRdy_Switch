@@ -104,7 +104,7 @@ class environment;
             mon_o_3.main();
             scb.main();  
             begin
-                #15000;
+                #1000;
                 report();
                 $stop;
             end    

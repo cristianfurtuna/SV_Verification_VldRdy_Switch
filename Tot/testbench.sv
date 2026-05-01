@@ -27,6 +27,8 @@ module testbench;
     out_interface out_intf_3(clk, rst_ni);
 
     default_test t1(in_intf, out_intf_0, out_intf_1, out_intf_2, out_intf_3);
+    //date_1_canal t2(in_intf, out_intf_0, out_intf_1, out_intf_2, out_intf_3);
+    //delay_mare_in_test t3(in_intf, out_intf_0, out_intf_1, out_intf_2, out_intf_3);
  switch DUT (
  .rst_ni    (in_intf.rst_ni),
  .clk_i     (in_intf.clk),
@@ -37,8 +39,8 @@ module testbench;
  .ready_i   ({out_intf_3.ready_i, out_intf_2.ready_i, out_intf_1.ready_i, out_intf_0.ready_i}), 
  .data_o    ({out_intf_3.data_o, out_intf_2.data_o, out_intf_1.data_o, out_intf_0.data_o})
  );
-   
-
+ 
+ 
     initial begin 
         $dumpfile("dump.vcd"); $dumpvars;
     end

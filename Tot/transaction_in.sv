@@ -13,10 +13,9 @@ rand bit [1:0] address;
 rand int delay;         //delay intre tranzactii
 
 //constrangeri
-//constraint delay_constr { delay >= 0 && delay < 10; }; //ne asiguram ca delay-ul dintre tranzactii nu este prea mare
-constraint delay_constr { delay inside {[0:50]};}; //ne asiguram ca avem delay intr-o plaja mai mare de valori --Denis
+constraint delay_constr { soft delay inside {[0:50]};}; //ne asiguram ca avem delay intr-o plaja mai mare de valori --Denis
 constraint valid_constr { soft  valid_i  dist { 1'b1 := 90, 1'b0 := 10}; }; //soft ne permite sa suprascriem constraint-ul
-//constraint data_constr  { data_i inside {[0:255]};}; //ne asiguram ca data acopera toata plaja de valori --Denis
+constraint big_delays_c;
 
 
 //aceasta functie afiseaza valorile randomizate ale atributelor clasei

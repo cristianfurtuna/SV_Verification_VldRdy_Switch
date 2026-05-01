@@ -1,4 +1,4 @@
-program default_test(
+program date_1_canal(
     in_interface in_intf,
     out_interface out_intf_0,
     out_interface out_intf_1,
