@@ -2,6 +2,8 @@
 //(folosind obiecte ale clasei transaction); in implementarea de fata, datele preluate de pe interfete sunt trimise scoreboardului pentru verificare
 //Samples the interface signals, captures into transaction packet and send the packet to scoreboard.
 
+`include "coverage_in.sv"
+
 `define MON_IN_IF in_vif.MONITOR.mon_cb
 class monitor_in;
 
@@ -12,7 +14,7 @@ string name;
 //se creaza portul prin care monitorul trimite scoreboardului datele colectate de pe interfata DUT-ului sub forma de tranzactii 
 //creating mailbox handle
 mailbox mon2scb;
-//coverage_in coverage_collector;
+coverage_in coverage_collector;
 
 
 //variabila pentru masurarea delay-ului dintre tranzactii
@@ -28,7 +30,7 @@ int current_delay = 0;
 		
 		this.name = name;
 		
-		//coverage_collector = new(name);
+		coverage_collector = new(name);
 	endfunction
 	
 task main;
@@ -51,7 +53,7 @@ task main;
         $display("%0t [MONITOR_IN_%s] Pachet detectat: Data = %h, Delay = %0d", $time, name, trans.data_i, trans.delay);
         
         //apel coverage
-        //coverage_collector.sample_function(trans);
+        coverage_collector.sample_function(trans);
         
         //trimitem tranzactia catre scoreboard
         mon2scb.put(trans);
