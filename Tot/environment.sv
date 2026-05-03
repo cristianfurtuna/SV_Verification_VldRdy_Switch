@@ -1,3 +1,6 @@
+`ifndef ENVIRONMENT_SV
+`define ENVIRONMENT_SV
+
 class environment;
    // `include "transaction_in.sv"
   //  `include "transaction_out.sv"
@@ -104,7 +107,9 @@ class environment;
             mon_o_3.main();
             scb.main();  
             begin
-                #1000;
+                // Asteptam un timp calculat dinamic, bazat pe numarul de tranzactii pe care testul doreste sa le ruleze.
+                // Estimam cel mult 1500 de unitati de timp per tranzactie (pentru worst-case delay) + o mica garda de timp la final
+                #(gen_i.trans_ct * 1500 + 10000);
                 report();
                 $stop;
             end    
@@ -133,3 +138,5 @@ class environment;
     endtask
 
 endclass
+
+`endif

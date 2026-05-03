@@ -4,6 +4,7 @@
 //se declara macro-ul DRIV_IF care va reprezenta interfata pe care driverul va trimite date DUT-ului
 //`define DRIV_IF in_vif.DRIVER.driver_cb
 
+`include "transaction_in.sv"
 class driver_in;
 int no_transactions;
 
@@ -42,7 +43,7 @@ task driving;
 	in_vif.DRIVER.drv_cb.valid_i <= 0;
 	in_vif.DRIVER.drv_cb.data_i  <= 0;
 	
-	@(in_vif.DRIVER.drv_cb); //adaugat de Denis, asteptam un tact intre tranzactii 
+	// @(in_vif.DRIVER.drv_cb); // comentat pentru a permite trafic back-to-back (delay 0) 
 	
 	no_transactions++;
 endtask

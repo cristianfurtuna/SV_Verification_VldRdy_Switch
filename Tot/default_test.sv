@@ -1,3 +1,6 @@
+`include "transaction_in.sv"
+`include "environment.sv"
+
 program default_test(
     in_interface in_intf,
     out_interface out_intf_0,

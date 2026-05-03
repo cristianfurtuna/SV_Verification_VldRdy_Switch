@@ -1,3 +1,7 @@
+`include "default_test.sv"
+`include "heavy_random_test.sv"
+`include "burst_test.sv"
+
 module testbench;
 
     `include "generator_in.sv"
@@ -26,9 +30,12 @@ module testbench;
     out_interface out_intf_2(clk, rst_ni);
     out_interface out_intf_3(clk, rst_ni);
 
-    default_test t1(in_intf, out_intf_0, out_intf_1, out_intf_2, out_intf_3);
+    //default_test t1(in_intf, out_intf_0, out_intf_1, out_intf_2, out_intf_3);
     //date_1_canal t2(in_intf, out_intf_0, out_intf_1, out_intf_2, out_intf_3);
     //delay_mare_in_test t3(in_intf, out_intf_0, out_intf_1, out_intf_2, out_intf_3);
+    
+    //heavy_random_test t_heavy(in_intf, out_intf_0, out_intf_1, out_intf_2, out_intf_3);
+    burst_test t_burst(in_intf, out_intf_0, out_intf_1, out_intf_2, out_intf_3);
  switch DUT (
  .rst_ni    (in_intf.rst_ni),
  .clk_i     (in_intf.clk),

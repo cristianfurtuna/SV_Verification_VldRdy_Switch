@@ -32,7 +32,7 @@ modport MONITOR (clocking mon_cb, input clk, rst_ni);
 // asertii
 property stable_data_in;
 	@(posedge clk) disable iff (rst_ni == 0) //daca avem reset, nu se executa asertia
-    (valid_i && !ready_o) |-> $stable(data_i); //se foloseste "|->" deoarece $stable compara valoarea curenta cu cea din tactul anterior
+    (valid_i && !ready_o) |=> $stable(data_i); //se foloseste "|=>" deoarece $stable compara valoarea curenta cu cea din tactul anterior
 endproperty
 
 asertia_stable_data: assert property (stable_data_in)

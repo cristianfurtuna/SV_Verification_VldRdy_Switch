@@ -1,4 +1,6 @@
 //aici se declara tipul de data folosit pentru a stoca datele vehiculate intre generator si driver; monitorul, de asemenea, preia datele de pe interfata, le recompune folosind un obiect al acestui tip de data, si numai apoi le proceseaza
+`ifndef TRANSACTION_OUT_SV
+`define TRANSACTION_OUT_SV
 class transaction_out;
 
 	 bit [7:0] data_o;  //iesire deci nu necesita rand
@@ -39,3 +41,4 @@ endfunction
 
 
 endclass
+`endif

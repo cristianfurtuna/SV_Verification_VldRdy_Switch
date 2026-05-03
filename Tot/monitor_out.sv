@@ -33,38 +33,34 @@ int current_delay = 0;
 	
 task main;
     forever begin
-    //se declara si se creeaza obiectul de tip tranzactie care va contine
-    //datele preluate de pe interfata
-    transaction_out trans;
-    //datele sunt citite pe frontul de ceas, informatiile preluate de pe
-    //semnale fiind retinute in obiectul de tip tranzactie
-    @(posedge out_vif.MONITOR.clk);
-    //daca avem handshake valid pe canalul corespunzator ID-ului
-    if(`MON_OUT_IF.valid_o && `MON_OUT_IF.ready_i) begin
-        trans = new(); //se creaza un obiect de tip tranzactie pentru datele capturate
-        trans.data_o = `MON_OUT_IF.data_o; // colectam datele de pe canal
-        trans.delay = current_delay; //retinem delay-ul masurat
-        
-        //afisam in consola ce am capturat
-        $display("%0t [MONITOR_OUT_%s] Pachet detectat: Data = %h, Delay = %0d", $time, name, trans.data_o, trans.delay);
-        
-        //apel coverage
-        coverage_collector.sample_function(trans);
-        
-        //trimitem tranzactia catre scoreboard
-        mon2scb.put(trans);
-        
-        //resetam contorul de la delay pentru tranzactia urmatoare
-        current_delay = 0;
-        
-        //asteptam sa se termine handshake-ul curent pentru a nu citi
-        //acelasi pachet de mai multe ori
-        wait(`MON_OUT_IF.valid_o == 0 || `MON_OUT_IF.ready_i == 0);
-    end
-      else begin
-        //daca nu avem transfer valid, incrementam delay-ul
-        current_delay++;
-     end
+        //se declara si se creeaza obiectul de tip tranzactie care va contine
+        //datele preluate de pe interfata
+        transaction_out trans;
+        //datele sunt citite pe frontul de ceas, informatiile preluate de pe
+        //semnale fiind retinute in obiectul de tip tranzactie
+        @(posedge out_vif.MONITOR.clk);
+        //daca avem handshake valid pe canalul corespunzator ID-ului
+        if(`MON_OUT_IF.valid_o == 1 && `MON_OUT_IF.ready_i == 1) begin
+            trans = new(); //se creaza un obiect de tip tranzactie pentru datele capturate
+            trans.data_o = `MON_OUT_IF.data_o; // colectam datele de pe canal
+            trans.delay = current_delay; //retinem delay-ul masurat
+            
+            //afisam in consola ce am capturat
+            $display("%0t [MONITOR_OUT_%s] Pachet detectat: Data = %h, Delay = %0d", $time, name, trans.data_o, trans.delay);
+            
+            //apel coverage
+            coverage_collector.sample_function(trans);
+            
+            //trimitem tranzactia catre scoreboard
+            mon2scb.put(trans);
+            
+            //resetam contorul de la delay pentru tranzactia urmatoare
+            current_delay = 0;
+        end
+        else begin
+            //daca nu avem transfer valid, incrementam delay-ul
+            current_delay++;
+        end
     end         
 endtask        
         
